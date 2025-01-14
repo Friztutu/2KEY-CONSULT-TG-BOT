@@ -1,7 +1,5 @@
-from sys import prefix
-
 from aiogram import types, Router, F
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, Command
 
 import src.keyboards as kb
 
@@ -50,3 +48,16 @@ async def cmb_ozon_competencies(callback_query: types.CallbackQuery):
 @router.callback_query(F.data == "register")
 async def cmb_choice_market(callback_query: types.CallbackQuery):
     await callback_query.message.edit_text("Какой маркетплей вас интересует", reply_markup=kb.choice_market_keyboard)
+
+@router.message(Command("reg"))
+async def cmb_choice_market(message: types.Message):
+    await message.answer("Какой маркетплей вас интересует", reply_markup=kb.choice_market_keyboard)
+
+@router.message()
+async def cmb_echo(message: types.Message):
+    await message.answer("❌ Неизвестная команда\n"
+                         "\n"
+                         "/start - 🏠 Главная страница\n"
+                         "/reg - 📌 Тарифы и стоимость\n"
+                         "\n"
+                         "Если возникли трудности, напишите нам @key2consult")

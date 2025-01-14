@@ -9,10 +9,22 @@ from src.handlers import router
 
 load_dotenv()
 bot = Bot(os.getenv('Token'))
+
 dp = Dispatcher(bot=bot)
+
+from aiogram.types import BotCommand
+
+
+async def setup_bot_commands():
+    bot_commands = [
+        BotCommand(command="/start", description="🏠 Главная страница"),
+        BotCommand(command="/reg", description="✏️ Оставить заявку"),
+    ]
+    await bot.set_my_commands(bot_commands)
 
 async def main():
     dp.include_router(router)
+    await setup_bot_commands()
     await dp.start_polling(bot)
 
 
