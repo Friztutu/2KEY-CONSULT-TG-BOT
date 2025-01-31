@@ -88,3 +88,11 @@ choice_is_have_market = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="❌ Нет", callback_data="Нет")],
     # [InlineKeyboardButton(text="🔙 Назад", callback_data="back")]
 ])
+
+url_market_denied = ReplyKeyboardMarkup(keyboard=[
+    [KeyboardButton(text="Нет магазина")]
+], resize_keyboard=True, one_time_keyboard=True)
+
+categories_denied = ReplyKeyboardMarkup(keyboard=[
+    [KeyboardButton(text="Пока не работаю")]
+], resize_keyboard=True, one_time_keyboard=True)

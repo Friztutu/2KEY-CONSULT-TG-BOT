@@ -21,7 +21,7 @@ class RegisteredUsers(Base):
     __tablename__ = "registered_users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    tg_id: Mapped[BigInteger] = mapped_column(BigInteger)
+    tg_id: Mapped[BigInteger] = mapped_column(BigInteger, unique=True)
     name: Mapped[str] = mapped_column(String(120), nullable=True)
     marketplace: Mapped[str] = mapped_column(String(120), nullable=True)
     service: Mapped[str] = mapped_column(String(120), nullable=True)

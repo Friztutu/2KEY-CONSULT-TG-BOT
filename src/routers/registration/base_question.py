@@ -33,15 +33,13 @@ async def choice_is_have_market(callback_query: types.CallbackQuery, state: FSMC
 
 @router.callback_query(RegistrationState.is_have_market, F.data == "Нет")
 async def choice_payment_method(callback_query: types.CallbackQuery, state: FSMContext):
-    await state.update_data(is_have_market=callback_query.data)
-    await state.set_state(RegistrationState.market_duration)
-    await state.update_data(market_duration=None)
-    await state.set_state(RegistrationState.market_turnover)
-    await state.update_data(market_turnover=None)
-    await state.set_state(RegistrationState.market_category)
-    await state.update_data(market_category=None)
-    await state.set_state(RegistrationState.market_url)
-    await state.update_data(market_url=None)
+    await state.update_data(
+        is_have_market=callback_query.data,
+        market_duration=None,
+        market_turnover=None,
+        market_category=None,
+        market_url=None
+    )
     await state.set_state(RegistrationState.payment_method)
     await callback_query.message.edit_text("Предпочтительный режим оплаты услуг менеджера", reply_markup=kb.choice_payment_method)
 
@@ -55,6 +53,6 @@ async def choice_problem_type(callback_query: types.CallbackQuery, state: FSMCon
 async def end_registration(callback_query: types.CallbackQuery, state: FSMContext):
     await state.update_data(problem_type=callback_query.data)
     data = await state.get_data()
-    await rq.set_registered_user(callback_query.message.from_user.id, data)
+    await rq.set_registered_user(callback_query.from_user.id, callback_query.from_user.first_name, data)
     await state.clear()
     await callback_query.message.edit_text("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.")

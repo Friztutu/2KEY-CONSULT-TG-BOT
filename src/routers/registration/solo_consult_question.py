@@ -19,11 +19,4 @@ async def cmb_choice_problem(callback_query: types.CallbackQuery, state: FSMCont
 async def cmb_input_url(message: types.Message, state: FSMContext):
     await state.update_data(problem_type=message.text)
     await state.set_state(RegistrationState.market_url)
-    await message.reply("Оставьте ссылку на ваш магазин. (Если нету, просто отправьте \"-\")", callbacks="next")
-
-@router.message(RegistrationState.market_url)
-async def cmb_end_solo_reg(message: types.Message, state: FSMContext):
-    await state.update_data(market_url=message.text)
-    data = await state.get_data()
-    await rq.set_registered_user(message.from_user.id, data)
-    await state.clear()
+    await message.reply("Оставьте ссылку на ваш магазин.", reply_markup=kb.url_market_denied)

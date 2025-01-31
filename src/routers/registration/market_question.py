@@ -1,8 +1,10 @@
 from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
+from aiogram.types import ReplyKeyboardRemove
 
 import src.keyboards as kb
 from .states import RegistrationState
+from src.model import requests as rq
 
 router = Router()
 
@@ -22,16 +24,33 @@ async def choice_market_turnover(callback_query: types.CallbackQuery, state: FSM
 async def choice_market_category(callback_query: types.CallbackQuery, state: FSMContext):
     await state.update_data(market_turnover=callback_query.data)
     await state.set_state(RegistrationState.market_category)
-    await callback_query.message.edit_text("Категории, в которых работаете")
+    await callback_query.message.delete()
+    await callback_query.message.answer("Категории, в которых работаете?", reply_markup=kb.categories_denied)
 
 @router.message(RegistrationState.market_category)
 async def choice_url_market(message: types.Message, state: FSMContext):
     await state.update_data(market_category=message.text)
     await state.set_state(RegistrationState.market_url)
-    await message.answer("Ссылка на ваш магазин")
+    await message.answer("Ссылка на ваш магазин?", reply_markup=kb.url_market_denied)
 
 @router.message(RegistrationState.market_url)
 async def choice_payment_method_(message: types.Message, state: FSMContext):
     await state.update_data(market_url=message.text)
-    await state.set_state(RegistrationState.payment_method)
-    await message.answer("Предпочтительный режим оплаты услуг менеджера", reply_markup=kb.choice_payment_method)
+
+    data = await state.get_data()
+
+    if data["service"] == "Разовая консультация":
+        await state.update_data(
+            payment_method=None,
+            is_have_market=None,
+            market_duration=None,
+            market_turnover=None,
+            market_category=None
+        )
+        data = await state.get_data()
+        await rq.set_registered_user(message.from_user.id, message.from_user.first_name, data)
+        await state.clear()
+        await message.answer("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.")
+    else:
+        await state.set_state(RegistrationState.payment_method)
+        await message.answer("Предпочтительный режим оплаты услуг менеджера", reply_markup=kb.choice_payment_method)
