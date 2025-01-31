@@ -5,10 +5,12 @@ import logging
 from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
 
-from src.handlers import router
+from src.model.model import async_main
+from src import router
 
 load_dotenv()
 bot = Bot(os.getenv('Token'))
+ADMIN_ID = os.getenv('ADMIN_USER_ID')
 
 dp = Dispatcher(bot=bot)
 
@@ -23,6 +25,7 @@ async def setup_bot_commands():
     await bot.set_my_commands(bot_commands)
 
 async def main():
+    await async_main()
     dp.include_router(router)
     await setup_bot_commands()
     await dp.start_polling(bot)
