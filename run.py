@@ -7,10 +7,9 @@ from dotenv import load_dotenv
 
 from src.model.model import async_main
 from src import router
+from config import TOKEN, ADMIN_USER_ID
 
-load_dotenv()
-bot = Bot(os.getenv('Token'))
-ADMIN_ID = os.getenv('ADMIN_USER_ID')
+bot = Bot(TOKEN)
 
 dp = Dispatcher(bot=bot)
 
@@ -21,7 +20,11 @@ async def setup_bot_commands():
     bot_commands = [
         BotCommand(command="/start", description="🏠 Главная страница"),
         BotCommand(command="/reg", description="✏️ Оставить заявку"),
+        BotCommand(command="/about_wb", description="🟣 О нас на WildBerries"),
+        BotCommand(command="/about_ozon", description="🔵 О нас на Ozon"),
+        BotCommand(command="/your_request", description="📄 Посмотреть свою заявку")
     ]
+
     await bot.set_my_commands(bot_commands)
 
 async def main():

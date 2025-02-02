@@ -1,7 +1,7 @@
 from typing import Any
 
 from .model import async_session, User, RegisteredUsers
-from sqlalchemy import select, update, insert
+from sqlalchemy import select, update
 
 
 async def set_user(tg_id):
@@ -51,6 +51,6 @@ async def set_registered_user(tg_id: int, name: str, data: dict[str, Any]) -> No
         await session.commit()
 
 
-async def get_registered_user():
+async def get_full_registered_users():
     async with async_session() as session:
         return await session.execute(select(RegisteredUsers))

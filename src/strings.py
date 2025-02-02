@@ -9,3 +9,8 @@ UNEXPECTED_COMMAND_STRING = ("❌ Неизвестная команда\n"
                              "/reg - 📌 Тарифы и стоимость\n"
                              "\n"
                              "Если возникли трудности, напишите нам @key2consult")
+
+ABOUT_OZON_STRING = "https://telegra.ph/Kejsy-OZON-01-30"
+
+ABOUT_WB_STRING = "https://graph.org/Kejsy-VB-01-24"
+

@@ -34,6 +34,14 @@ class RegisteredUsers(Base):
     market_url: Mapped[str] = mapped_column(String(120), nullable=True)
 
 
+class ManagerUser(Base):
+    __tablename__ = "manager_user"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    tg_id: Mapped[BigInteger] = mapped_column(BigInteger, unique=True)
+    first_name: Mapped[str] = mapped_column(String(20))
+
+
 async def async_main():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
