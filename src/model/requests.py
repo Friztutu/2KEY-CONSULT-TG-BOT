@@ -54,3 +54,10 @@ async def set_registered_user(tg_id: int, name: str, data: dict[str, Any]) -> No
 async def get_full_registered_users():
     async with async_session() as session:
         return await session.execute(select(RegisteredUsers))
+
+
+async def get_registered_user_by_id(tg_id: int):
+    async with async_session() as session:
+        user = await session.scalar(select(RegisteredUsers).where(RegisteredUsers.tg_id == tg_id))
+
+        return user

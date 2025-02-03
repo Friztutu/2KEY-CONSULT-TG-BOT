@@ -22,7 +22,7 @@ async def setup_bot_commands():
         BotCommand(command="/reg", description="✏️ Оставить заявку"),
         BotCommand(command="/about_wb", description="🟣 О нас на WildBerries"),
         BotCommand(command="/about_ozon", description="🔵 О нас на Ozon"),
-        BotCommand(command="/your_request", description="📄 Посмотреть свою заявку")
+        BotCommand(command="/my_request", description="📄 Посмотреть свою заявку")
     ]
 
     await bot.set_my_commands(bot_commands)

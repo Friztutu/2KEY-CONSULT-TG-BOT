@@ -22,8 +22,15 @@ MARKETPLACE_QUESTION_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="🏠 В главное меню", callback_data="Main Menu")],
 ])
 
-SERVICE_QUESTION_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
+SERVICE_QUESTION_INLINE_KEYBOARD_OZON = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="📒 Разовая консультация", callback_data="Разовая консультация")],
+    [InlineKeyboardButton(text="📔 Работа с продвижением", callback_data="Работа с продвижением")],
+    [InlineKeyboardButton(text="📓 Полное ведение", callback_data="Полное ведение")],
+    [InlineKeyboardButton(text="📗 Полное ведение с подбором товаров", callback_data="Полное ведение с подбором товаров")],
+    [InlineKeyboardButton(text="🔙 Назад", callback_data="Back")],
+])
+
+SERVICE_QUESTION_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="📔 Работа с продвижением", callback_data="Работа с продвижением")],
     [InlineKeyboardButton(text="📓 Полное ведение", callback_data="Полное ведение")],
     [InlineKeyboardButton(text="📗 Полное ведение с подбором товаров", callback_data="Полное ведение с подбором товаров")],
