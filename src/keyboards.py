@@ -67,21 +67,14 @@ PAYMENT_METHOD_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="🔙 Назад", callback_data="Back")]
 ])
 
-# REGISTRATION REPLAY KEYBOARDS
-URL_MARKET_REPLAY_KEYBOARDS = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text="Нет магазина")],
-    [KeyboardButton(text="Назад")]
-], resize_keyboard=True, one_time_keyboard=True)
+BACK_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="🔙 Назад", callback_data="Back")]
+])
 
-CATEGORIES_MARKET_REPLAY_KEYBOARDS = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text="Пока не работаю")],
-    [KeyboardButton(text="Назад")]
-], resize_keyboard=True, one_time_keyboard=True)
-
-CLIENT_PROBLEM_REPLAY_KEYBOARDS = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text="Проблемы с ДРР")],
-    [KeyboardButton(text="Хочу увеличить выручку")],
-    [KeyboardButton(text="Низкая рентабельность")],
-    [KeyboardButton(text="Хочу делегировать свои задачи профессионалам")],
-    [KeyboardButton(text="Назад")]
-], resize_keyboard=True, one_time_keyboard=True)
+CLIENT_PROBLEM_INLINE_KEYBOARDS = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="Проблемы с ДРР", callback_data="Проблемы с ДРР")],
+    [InlineKeyboardButton(text="Хочу увеличить выручку", callback_data="Хочу увеличить выручку")],
+    [InlineKeyboardButton(text="Низкая рентабельность", callback_data="Низкая рентабельность")],
+    [InlineKeyboardButton(text="Хочу делегировать свои задачи профессионалам", callback_data="Хочу делегировать свои задачи профессионалам")],
+    [InlineKeyboardButton(text="🔙 Назад", callback_data="Back")]
+])

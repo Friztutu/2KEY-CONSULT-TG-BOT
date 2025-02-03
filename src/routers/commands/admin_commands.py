@@ -16,7 +16,8 @@ async def handle_admin_command(message: types.Message, state: FSMContext) -> Non
     if str(message.from_user.id) != str(ADMIN_USER_ID):
         await message.answer(strings.UNEXPECTED_COMMAND_STRING)
     else:
-        await message.answer("Привет!")
+        await message.answer("Список доступных команд: \n"
+                             "/table - Получить всех зарегистрированных пользователей \n")
 
 
 @router.message(Command("table"))
