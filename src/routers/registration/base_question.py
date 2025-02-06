@@ -75,14 +75,21 @@ async def handle_request_contact(callback_query: types.CallbackQuery, state: FSM
     await callback_query.message.answer("Ваши контакты для связи?", reply_markup=kb.REQUEST_CONTACT_INLINE_KEYBOARD)
 
 
-@router.message(RegistrationState.contact, F.data != "Back")
+@router.message(RegistrationState.contact)
 async def end_registration(message: types.Message, state: FSMContext):
-    await state.update_data(contact=message.contact.phone_number)
-    data = await state.get_data()
-    await message.answer(f"{data["contact"]}")
-    await rq.set_registered_user(message.from_user.id, message.from_user.first_name, data)
-    await state.clear()
-    await message.answer("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.", reply_markup=types.ReplyKeyboardRemove())
+    if message.contact is not None:
+        await state.update_data(contact=message.contact.phone_number)
+        data = await state.get_data()
+        await rq.set_registered_user(message.from_user.id, message.from_user.first_name, data)
+        await state.clear()
+        await message.answer("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.", reply_markup=types.ReplyKeyboardRemove())
+    else:
+        await state.update_data(contact=message.text)
+        data = await state.get_data()
+        await rq.set_registered_user(message.from_user.id, message.from_user.first_name, data)
+        await state.clear()
+        await message.answer("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.",
+                             reply_markup=types.ReplyKeyboardRemove())
 
 
 
