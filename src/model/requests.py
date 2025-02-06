@@ -2,6 +2,7 @@ from typing import Any
 
 from .model import async_session, User, RegisteredUsers, ManagerUser
 from sqlalchemy import select, update, BigInteger
+from src import keyboards as kb
 
 
 async def set_user(tg_id):
@@ -17,33 +18,51 @@ async def set_registered_user(tg_id: int, name: str, data: dict[str, Any]) -> No
     async with async_session() as session:
         user = await session.scalar(select(RegisteredUsers).where(RegisteredUsers.tg_id == tg_id))
 
+        marketplace = kb.MARKETPLACES[data["marketplace"]]
+        service = kb.SERVICES[data["service"]]
+        payment_method = kb.PAYMENT_METHODS[data["payment_method"]]
+
+        if len(data["problem_type"]) == 1:
+            problem_type = kb.CLIENT_PROBLEMS[data["problem_type"]]
+        else:
+            problem_type = data["problem_type"]
+
+        is_have_market = kb.IS_HAVE_MARKET[data["is_have_market"]]
+        market_duration = kb.MARKET_DURATIONS[data["market_duration"]]
+        market_turnover = kb.MARKET_TURNOVERS[data["market_turnover"]]
+        market_category = data["market_category"]
+        market_url = data["market_url"]
+        phone = data["contact"]
+
         if not user:
              session.add(RegisteredUsers(tg_id=tg_id,
-                             marketplace=data["marketplace"],
-                             service=data["service"],
-                             payment_method=data["payment_method"],
-                             problem_type=data["problem_type"],
-                             is_have_market=data["is_have_market"],
-                             market_duration=data["market_duration"],
-                             market_turnover=data["market_turnover"],
-                             market_category=data["market_category"],
-                             market_url=data["market_url"],
-                             name=name
+                             marketplace=marketplace,
+                             service=service,
+                             payment_method=payment_method,
+                             problem_type=problem_type,
+                             is_have_market=is_have_market,
+                             market_duration=market_duration,
+                             market_turnover=market_turnover,
+                             market_category=market_category,
+                             market_url=market_url,
+                             name=name,
+                             phone=phone
                              ))
         else:
             await session.execute(
                 update(RegisteredUsers).values(
                     tg_id=tg_id,
                     name=name,
-                    marketplace=data["marketplace"],
-                    service=data["service"],
-                    payment_method=data["payment_method"],
-                    problem_type=data["problem_type"],
-                    is_have_market=data["is_have_market"],
-                    market_duration=data["market_duration"],
-                    market_turnover=data["market_turnover"],
-                    market_category=data["market_category"],
-                    market_url=data["market_url"]
+                    marketplace=marketplace,
+                    service=service,
+                    payment_method=payment_method,
+                    problem_type=problem_type,
+                    is_have_market=is_have_market,
+                    market_duration=market_duration,
+                    market_turnover=market_turnover,
+                    market_category=market_category,
+                    market_url=market_url,
+                    phone=phone
                 ).where(RegisteredUsers.tg_id == tg_id)
             )
 
@@ -83,3 +102,8 @@ async def get_full_registered_users():
 async def get_registered_user_by_id(tg_id: int):
     async with async_session() as session:
         return await session.scalar(select(RegisteredUsers).where(RegisteredUsers.tg_id == tg_id))
+
+
+async def delete_manager(tg_id: int) -> None:
+    async with async_session() as session:
+        pass

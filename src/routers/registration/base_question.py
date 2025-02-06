@@ -53,7 +53,7 @@ async def handle_presence_market_question_back(callback_query: types.CallbackQue
     await callback_query.message.edit_text("Выберите необходимую услугу:",
                                            reply_markup=kb.SERVICE_QUESTION_INLINE_KEYBOARD_OZON)
 
-@router.callback_query(RegistrationState.is_have_market, F.data == "Нет")
+@router.callback_query(RegistrationState.is_have_market, F.data == "2")
 async def handle_payment_method_question(callback_query: types.CallbackQuery, state: FSMContext):
     types.ReplyKeyboardRemove()
 
@@ -121,23 +121,23 @@ async def handle_problem_type_question_back(callback_query: types.CallbackQuery,
                                                reply_markup=kb.PAYMENT_METHOD_INLINE_KEYBOARD)
 
 
-@router.message(RegistrationState.problem_type)
+@router.callback_query(RegistrationState.problem_type, F.data)
+async def handle_request_contact(callback_query: types.CallbackQuery, state: FSMContext) -> None:
+    await state.update_data(problem_type=callback_query.data)
+    await state.set_state(RegistrationState.contact)
+    await callback_query.message.delete()
+    await callback_query.message.answer("Ваши контакты для связи?", reply_markup=kb.REQUEST_CONTACT_INLINE_KEYBOARD)
+
+
+
+@router.message(RegistrationState.contact)
 async def end_registration(message: types.Message, state: FSMContext):
-    await state.update_data(problem_type=message.text)
+    await state.update_data(contact=message.contact.phone_number)
     data = await state.get_data()
+    await message.answer(f"{data["contact"]}")
     await rq.set_registered_user(message.from_user.id, message.from_user.first_name, data)
     await state.clear()
     await message.answer("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.")
 
-
-@router.callback_query(RegistrationState.problem_type)
-async def end_registration(callback_query: types.CallbackQuery, state: FSMContext):
-    types.ReplyKeyboardRemove()
-
-    await state.update_data(problem_type=callback_query.data)
-    data = await state.get_data()
-    await rq.set_registered_user(callback_query.from_user.id, callback_query.from_user.first_name, data)
-    await state.clear()
-    await callback_query.message.edit_text("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.")
 
 

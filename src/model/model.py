@@ -1,6 +1,6 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, foreign
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
-from sqlalchemy import BigInteger, String, ForeignKey, Integer
+from sqlalchemy import BigInteger, String, ForeignKey, Integer, Boolean
 from sqlalchemy.sql.sqltypes import NullType
 
 engine = create_async_engine(url='sqlite+aiosqlite:///db.sqlite3')
@@ -26,12 +26,13 @@ class RegisteredUsers(Base):
     marketplace: Mapped[str] = mapped_column(String(120), nullable=True)
     service: Mapped[str] = mapped_column(String(120), nullable=True)
     payment_method: Mapped[str] = mapped_column(String(120), nullable=True)
-    problem_type: Mapped[str] = mapped_column(String(120), nullable=True)
-    is_have_market: Mapped[str] = mapped_column(String(120), nullable=True)
+    problem_type: Mapped[str] = mapped_column(String(300), nullable=True)
+    is_have_market: Mapped[bool] = mapped_column(Boolean, nullable=True)
     market_duration: Mapped[str] = mapped_column(String(120), nullable=True)
     market_turnover: Mapped[str] = mapped_column(String(120), nullable=True)
-    market_category: Mapped[str] = mapped_column(String(120), nullable=True)
-    market_url: Mapped[str] = mapped_column(String(120), nullable=True)
+    market_category: Mapped[str] = mapped_column(String(300), nullable=True)
+    market_url: Mapped[str] = mapped_column(String(300), nullable=True)
+    phone: Mapped[str] = mapped_column(String(20), nullable=True)
 
 
 class ManagerUser(Base):

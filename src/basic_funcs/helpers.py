@@ -5,9 +5,9 @@ def registered_user_to_string(registered_user: RegisteredUsers) -> str:
     magazine_info_string = ""
     base_info_string = ""
 
-    if registered_user.is_have_market == "Да":
+    if registered_user.is_have_market:
         magazine_info_string += (f"Ваш магазин существует: {registered_user.market_duration}\n"
-                                 f"Оборот вашего магазина: {registered_user.market_turnover}₽\n"
+                                 f"Оборот вашего магазина: {registered_user.market_turnover}\n"
                                  f"Категория в который вы работаете: {registered_user.market_category}\n"
                                  f"Ссылка на ваш магазин: {registered_user.market_url}")
 

@@ -3,11 +3,14 @@ from aiogram import Router, types
 from aiogram.fsm.context import FSMContext
 from io import StringIO
 
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
 from src.model import requests as rq
 from config import ADMIN_USER_ID
 from src import strings
 from src.model.model import RegisteredUsers
-from src.states import NewManagerState, SendAllUserState, SendOneUserState
+from src.states import NewManagerState, SendAllUserState, SendOneUserState, DeleteManagerState
 import csv
 
 
@@ -60,7 +63,8 @@ async def handle_table_command(message: types.Message, state: FSMContext) -> Non
         # Заголовки
         writer.writerow([
             "Тг айди", "Имя", "Маркетплейс", "Услуга", "Способ оплаты", "Проблема",
-            "Наличие магазина", "Длительность магазина", "Оборот магазина", "Категории магазина", "Ссылка на магазин"
+            "Наличие магазина", "Длительность магазина", "Оборот магазина", "Категории магазина", "Ссылка на магазин",
+            "Teлефон"
 
         ])
 
@@ -69,7 +73,7 @@ async def handle_table_command(message: types.Message, state: FSMContext) -> Non
             writer.writerow([
                 user.tg_id, user.name, user.marketplace, user.service, user.payment_method,
                 user.problem_type, user.is_have_market, user.market_duration, user.market_turnover,
-                user.market_category, user.market_url
+                user.market_category, user.market_url, user.phone
             ])
 
         # Подготавливаем файл для отправки
@@ -154,4 +158,22 @@ async def handle_get_tg_id_user(message: types.Message, state: FSMContext) -> No
 async def handle_send_message_to_one_user(message: types.Message, state: FSMContext) -> None:
     data = await state.get_data()
     await message.send_copy(chat_id=int(data["tg_id"]))
+    await state.clear()
     await message.answer("Сообщение успешно отправлено.")
+
+
+@router.message(Command("delete_manager"))
+async def handle_delete_manager_command(message: types.Message, state: FSMContext) -> None:
+    await state.set_state(DeleteManagerState.tg_id)
+    markup = InlineKeyboardBuilder()
+    managers = await rq.get_all_managers()
+
+    for manager in managers:
+        markup.add(InlineKeyboardButton(text=f"Имя: {manager.first_name}, TG ID: {manager.tg_id}", callback_data=f"{manager.tg_id}"))
+
+    await message.answer("Выберите менеджера которого надо удалить: ", reply_markup=markup.as_markup())
+
+
+@router.callback_query(DeleteManagerState.tg_id)
+async def handle_delete_manager(callback_query: types.CallbackQuery, state: FSMContext) -> None:
+    pass

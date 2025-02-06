@@ -10,6 +10,7 @@ class RegistrationState(StatesGroup):
     market_turnover: str = State()
     market_category: str = State()
     market_url: str = State()
+    contact: str = State()
 
 
 class NewManagerState(StatesGroup):
@@ -24,4 +25,8 @@ class SendAllUserState(StatesGroup):
 class SendOneUserState(StatesGroup):
     tg_id: str = State()
     message: str = State()
+
+
+class DeleteManagerState(StatesGroup):
+    tg_id: str = State()
 

@@ -7,7 +7,7 @@ from src.states import RegistrationState
 router = Router()
 
 
-@router.callback_query(RegistrationState.is_have_market, F.data == "Да")
+@router.callback_query(RegistrationState.is_have_market, F.data == "1")
 async def handle_market_duration_question(callback_query: types.CallbackQuery, state: FSMContext):
 
     await state.update_data(is_have_market=callback_query.data)
