@@ -2,9 +2,7 @@ from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
 
 import src.keyboards as kb
-from .states import RegistrationState
-from src.model import requests as rq
-from src.basic_funcs import validation
+from src.states import RegistrationState
 
 router = Router()
 

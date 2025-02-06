@@ -1,7 +1,7 @@
 from aiogram.filters import Command, CommandStart
 from aiogram import Router, types
 from aiogram.fsm.context import FSMContext
-from ..registration.states import RegistrationState
+from src.states import RegistrationState
 
 from src import keyboards as kb, strings
 from src.model import requests as rq

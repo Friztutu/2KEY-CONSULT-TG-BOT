@@ -10,3 +10,18 @@ class RegistrationState(StatesGroup):
     market_turnover: str = State()
     market_category: str = State()
     market_url: str = State()
+
+
+class NewManagerState(StatesGroup):
+    tg_id: str = State()
+    first_name: str = State()
+
+
+class SendAllUserState(StatesGroup):
+    message: str = State()
+
+
+class SendOneUserState(StatesGroup):
+    tg_id: str = State()
+    message: str = State()
+

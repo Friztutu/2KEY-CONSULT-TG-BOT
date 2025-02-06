@@ -1,7 +1,7 @@
 from typing import Any
 
-from .model import async_session, User, RegisteredUsers
-from sqlalchemy import select, update
+from .model import async_session, User, RegisteredUsers, ManagerUser
+from sqlalchemy import select, update, BigInteger
 
 
 async def set_user(tg_id):
@@ -51,13 +51,35 @@ async def set_registered_user(tg_id: int, name: str, data: dict[str, Any]) -> No
         await session.commit()
 
 
+async def get_all_managers():
+    async with async_session() as session:
+        result = await session.execute(select(ManagerUser))
+        managers = result.scalars().all()
+        return managers
+
+async def set_new_manager(data: dict[str, Any]) -> None:
+    async with async_session() as session:
+        session.add(ManagerUser(tg_id = int(data["tg_id"]), first_name = data["first_name"]))
+        await session.commit()
+
+
+async def get_full_user():
+    async with async_session() as session:
+        result = await session.execute(select(User))
+        users = result.scalars().all()
+        return users
+
+
+async def delete_manager(tg_id: int) -> None:
+    pass
+
 async def get_full_registered_users():
     async with async_session() as session:
-        return await session.execute(select(RegisteredUsers))
+        result =  await session.execute(select(RegisteredUsers))
+        user = result.scalars().all()
+        return user
 
 
 async def get_registered_user_by_id(tg_id: int):
     async with async_session() as session:
-        user = await session.scalar(select(RegisteredUsers).where(RegisteredUsers.tg_id == tg_id))
-
-        return user
+        return await session.scalar(select(RegisteredUsers).where(RegisteredUsers.tg_id == tg_id))
