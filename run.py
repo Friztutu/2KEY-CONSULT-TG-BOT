@@ -1,13 +1,10 @@
 import asyncio
-import os
 import logging
-
 from aiogram import Bot, Dispatcher
-from dotenv import load_dotenv
 
 from src.model.model import async_main
 from src import router
-from config import TOKEN, ADMIN_USER_ID
+from config import TOKEN
 
 bot = Bot(TOKEN)
 
