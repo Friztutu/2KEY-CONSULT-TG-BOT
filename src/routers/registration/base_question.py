@@ -21,22 +21,15 @@ async def handle_service_question(callback_query: types.CallbackQuery, state: FS
 
     keyboard = kb.SERVICE_QUESTION_INLINE_KEYBOARD_OZON
 
-    if callback_query.data != "Ozon":
+    if callback_query.data != "1":
         keyboard = kb.SERVICE_QUESTION_INLINE_KEYBOARD
 
     await state.update_data(marketplace=callback_query.data)
     await state.set_state(RegistrationState.service)
     await callback_query.message.edit_text("Выберите необходимую услугу:",reply_markup=keyboard)
 
-@router.callback_query(RegistrationState.service, F.data == "Back")
-async def handle_service_question_back(callback_query: types.CallbackQuery, state: FSMContext):
-    types.ReplyKeyboardRemove()
 
-    await state.set_state(RegistrationState.marketplace)
-    await callback_query.message.edit_text("Какой маркетплей вас интересует?",
-                                           reply_markup=kb.MARKETPLACE_QUESTION_INLINE_KEYBOARD)
-
-@router.callback_query(RegistrationState.service)
+@router.callback_query(RegistrationState.service, F.data != "Back")
 async def handle_presence_market_question(callback_query: types.CallbackQuery, state: FSMContext):
     types.ReplyKeyboardRemove()
 
@@ -45,13 +38,6 @@ async def handle_presence_market_question(callback_query: types.CallbackQuery, s
     await callback_query.message.edit_text("У вас есть магазин?",
                                            reply_markup=kb.PRESENCE_MARKET_INLINE_KEYBOARD)
 
-@router.callback_query(RegistrationState.is_have_market, F.data == "Back")
-async def handle_presence_market_question_back(callback_query: types.CallbackQuery, state: FSMContext):
-    types.ReplyKeyboardRemove()
-
-    await state.set_state(RegistrationState.service)
-    await callback_query.message.edit_text("Выберите необходимую услугу:",
-                                           reply_markup=kb.SERVICE_QUESTION_INLINE_KEYBOARD_OZON)
 
 @router.callback_query(RegistrationState.is_have_market, F.data == "2")
 async def handle_payment_method_question(callback_query: types.CallbackQuery, state: FSMContext):
@@ -79,24 +65,7 @@ async def handle_payment_method_question(callback_query: types.CallbackQuery, st
                                                reply_markup=kb.PAYMENT_METHOD_INLINE_KEYBOARD)
 
 
-@router.callback_query(RegistrationState.payment_method, F.data == "Back")
-async def handle_payment_method_question_back(callback_query: types.CallbackQuery, state: FSMContext):
-    types.ReplyKeyboardRemove()
-
-    data = await state.get_data()
-
-    if "is_have_market" in data.keys():
-        await state.set_state(RegistrationState.market_url)
-        await callback_query.message.delete()
-        await callback_query.message.answer("Ссылка на ваш магазин?",
-                             reply_markup=kb.BACK_INLINE_KEYBOARD)
-    else:
-        await state.set_state(RegistrationState.is_have_market)
-        await callback_query.message.edit_text("У вас есть магазин?",
-                                               reply_markup=kb.PRESENCE_MARKET_INLINE_KEYBOARD)
-
-
-@router.callback_query(RegistrationState.payment_method)
+@router.callback_query(RegistrationState.payment_method, F.data != "Back")
 async def handle_problem_type_question(callback_query: types.CallbackQuery, state: FSMContext):
     types.ReplyKeyboardRemove()
 
@@ -105,23 +74,8 @@ async def handle_problem_type_question(callback_query: types.CallbackQuery, stat
     await callback_query.message.delete()
     await callback_query.message.answer("Почему Вы решили обратиться к нам?", reply_markup=kb.CLIENT_PROBLEM_INLINE_KEYBOARDS)
 
-@router.callback_query(RegistrationState.problem_type, F.data == "Back")
-async def handle_problem_type_question_back(callback_query: types.CallbackQuery, state: FSMContext):
-    data = await state.get_data()
 
-    if data["service"] == "Разовая консультация" and data["is_have_market"] == "Нет":
-        await state.set_state(RegistrationState.is_have_market)
-        await callback_query.message.edit_text("У вас есть магазин?",reply_markup=kb.PRESENCE_MARKET_INLINE_KEYBOARD)
-    elif data["service"] == "Разовая консультация" and data["is_have_market"] == "Да":
-        await state.set_state(RegistrationState.market_url)
-        await callback_query.message.edit_text("Ссылка на ваш магазин?", reply_markup=kb.BACK_INLINE_KEYBOARD)
-    else:
-        await state.set_state(RegistrationState.payment_method)
-        await callback_query.message.edit_text("Предпочтительный режим оплаты услуг менеджера?",
-                                               reply_markup=kb.PAYMENT_METHOD_INLINE_KEYBOARD)
-
-
-@router.callback_query(RegistrationState.problem_type, F.data)
+@router.callback_query(RegistrationState.problem_type, F.data != "Back")
 async def handle_request_contact(callback_query: types.CallbackQuery, state: FSMContext) -> None:
     await state.update_data(problem_type=callback_query.data)
     await state.set_state(RegistrationState.contact)
@@ -129,8 +83,7 @@ async def handle_request_contact(callback_query: types.CallbackQuery, state: FSM
     await callback_query.message.answer("Ваши контакты для связи?", reply_markup=kb.REQUEST_CONTACT_INLINE_KEYBOARD)
 
 
-
-@router.message(RegistrationState.contact)
+@router.message(RegistrationState.contact, F.data != "Back")
 async def end_registration(message: types.Message, state: FSMContext):
     await state.update_data(contact=message.contact.phone_number)
     data = await state.get_data()

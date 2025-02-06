@@ -21,6 +21,7 @@ async def set_registered_user(tg_id: int, name: str, data: dict[str, Any]) -> No
         marketplace = kb.MARKETPLACES[data["marketplace"]]
         service = kb.SERVICES[data["service"]]
         payment_method = kb.PAYMENT_METHODS[data["payment_method"]]
+        phone = data["contact"]
 
         if len(data["problem_type"]) == 1:
             problem_type = kb.CLIENT_PROBLEMS[data["problem_type"]]
@@ -28,11 +29,17 @@ async def set_registered_user(tg_id: int, name: str, data: dict[str, Any]) -> No
             problem_type = data["problem_type"]
 
         is_have_market = kb.IS_HAVE_MARKET[data["is_have_market"]]
-        market_duration = kb.MARKET_DURATIONS[data["market_duration"]]
-        market_turnover = kb.MARKET_TURNOVERS[data["market_turnover"]]
-        market_category = data["market_category"]
-        market_url = data["market_url"]
-        phone = data["contact"]
+
+        if is_have_market:
+            market_duration = kb.MARKET_DURATIONS[data["market_duration"]]
+            market_turnover = kb.MARKET_TURNOVERS[data["market_turnover"]]
+            market_category = data["market_category"]
+            market_url = data["market_url"]
+        else:
+            market_duration = None
+            market_turnover = None
+            market_category = None
+            market_url = None
 
         if not user:
              session.add(RegisteredUsers(tg_id=tg_id,
@@ -106,4 +113,9 @@ async def get_registered_user_by_id(tg_id: int):
 
 async def delete_manager(tg_id: int) -> None:
     async with async_session() as session:
-        pass
+        result = await session.execute(select(ManagerUser).where(ManagerUser.tg_id == tg_id))
+        user = result.scalar_one()
+
+        if user:
+            await session.delete(user)
+            await session.commit()

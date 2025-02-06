@@ -1,4 +1,6 @@
-from src.model.model import RegisteredUsers
+from sqlalchemy import BigInteger
+
+from src.model.model import RegisteredUsers, ManagerUser
 
 
 def registered_user_to_string(registered_user: RegisteredUsers) -> str:
@@ -21,3 +23,12 @@ def registered_user_to_string(registered_user: RegisteredUsers) -> str:
                              f"Проблема с который вы обратились: {registered_user.problem_type}\n")
 
     return base_info_string + magazine_info_string
+
+
+def get_managers_id(managers: tuple[ManagerUser]) -> list[str]:
+    result = []
+
+    for manager in managers:
+        result.append(str(manager.tg_id))
+
+    return result
