@@ -26,7 +26,7 @@ async def handle_presence_market_question_back(callback_query: types.CallbackQue
 
     if data["marketplace"] != "1":
         keyboard = kb.SERVICE_QUESTION_INLINE_KEYBOARD
-        
+
     await callback_query.message.edit_text("Выберите необходимую услугу:",
                                            reply_markup=keyboard)
 
