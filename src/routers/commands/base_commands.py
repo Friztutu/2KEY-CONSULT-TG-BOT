@@ -14,29 +14,25 @@ async def cmd_start(message: types.Message, state: FSMContext) -> None:
     await state.clear()
 
     await rq.set_user(message.from_user.id)
-    await message.answer(f"Здравствуйте, {message.from_user.first_name}. " + strings.MAIN_MENU_STRING,
-                         reply_markup=kb.MAIN_MENU_INLINE_KEYBOARD)
+    await message.answer(f"Здравствуйте, {message.from_user.first_name}. " + strings.MAIN_MENU_STRING, reply_markup=kb.MAIN_MENU_INLINE_KEYBOARD)
 
 
 @router.message(Command("reg"))
 async def cmb_choice_market(message: types.Message, state: FSMContext) -> None:
     await state.set_state(RegistrationState.marketplace)
-    await message.answer("Какой маркетплей вас интересует",
-                         reply_markup=kb.MARKETPLACE_QUESTION_INLINE_KEYBOARD)
+    await message.answer("Какой маркетплей вас интересует", reply_markup=kb.MARKETPLACE_QUESTION_INLINE_KEYBOARD)
 
 
 @router.message(Command("about_ozon"))
 async def cmb_about_ozon(message: types.Message, state: FSMContext) -> None:
     await state.clear()
-    await message.answer(strings.ABOUT_OZON_STRING,
-                                           reply_markup=kb.ABOUT_US_INLINE_KEYBOARD)
+    await message.answer(strings.ABOUT_OZON_STRING, reply_markup=kb.ABOUT_US_INLINE_KEYBOARD)
 
 
 @router.message(Command("about_wb"))
 async def cmb_about_wb(message: types.Message, state: FSMContext) -> None:
     await state.clear()
-    await message.answer(strings.ABOUT_WB_STRING,
-                                           reply_markup=kb.ABOUT_US_INLINE_KEYBOARD)
+    await message.answer(strings.ABOUT_WB_STRING, reply_markup=kb.ABOUT_US_INLINE_KEYBOARD)
 
 
 @router.message(Command("my_request"))
