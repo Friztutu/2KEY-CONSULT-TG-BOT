@@ -49,6 +49,7 @@ async def handle_table_command(message: types.Message, state: FSMContext) -> Non
         writer.writerow([
             "Тг айди", "ТГ USERNAME", "Имя", "Маркетплейс", "Услуга", "Способ оплаты", "Проблема",
             "Наличие магазина", "Длительность магазина", "Оборот магазина", "Категории магазина", "Ссылка на магазин",
+            "Время и Дата"
 
         ])
 
@@ -57,7 +58,7 @@ async def handle_table_command(message: types.Message, state: FSMContext) -> Non
             writer.writerow([
                 user.tg_id, user.username, user.name, user.marketplace, user.service, user.payment_method,
                 user.problem_type, user.is_have_market, user.market_duration, user.market_turnover,
-                user.market_category, user.market_url, user.phone
+                user.market_category, user.market_url, user.date
             ])
 
         # Подготавливаем файл для отправки

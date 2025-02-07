@@ -20,7 +20,7 @@ async def cmd_start(message: types.Message, state: FSMContext) -> None:
 @router.message(Command("reg"))
 async def cmb_choice_market(message: types.Message, state: FSMContext) -> None:
     await state.set_state(RegistrationState.marketplace)
-    await message.answer("Какой маркетплей вас интересует", reply_markup=kb.MARKETPLACE_QUESTION_INLINE_KEYBOARD)
+    await message.answer(strings.MARKETPLACE_QUESTION, reply_markup=kb.MARKETPLACE_QUESTION_INLINE_KEYBOARD)
 
 
 @router.message(Command("about_ozon"))

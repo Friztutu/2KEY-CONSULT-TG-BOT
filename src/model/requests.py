@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 
 from .model import async_session, User, RegisteredUsers, ManagerUser
@@ -87,10 +88,6 @@ async def get_full_user():
         result = await session.execute(select(User))
         users = result.scalars().all()
         return users
-
-
-async def delete_manager(tg_id: int) -> None:
-    pass
 
 async def get_full_registered_users():
     async with async_session() as session:

@@ -1,6 +1,8 @@
+import datetime
+
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, foreign
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
-from sqlalchemy import BigInteger, String, ForeignKey, Integer, Boolean
+from sqlalchemy import BigInteger, String, ForeignKey, Integer, Boolean, DateTime, func
 from sqlalchemy.sql.sqltypes import NullType
 
 engine = create_async_engine(url='sqlite+aiosqlite:///db.sqlite3')
@@ -34,6 +36,7 @@ class RegisteredUsers(Base):
     market_category: Mapped[str] = mapped_column(String(300), nullable=True)
     market_url: Mapped[str] = mapped_column(String(300), nullable=True)
     phone: Mapped[str] = mapped_column(String(20), nullable=True)
+    date: Mapped[DateTime] = mapped_column(DateTime, default=func.now())
 
 
 class ManagerUser(Base):
