@@ -12,7 +12,7 @@ router = Router()
 @router.callback_query(F.data == "Registration")
 async def handle_marketplace_question(callback_query: types.CallbackQuery, state: FSMContext):
     await state.set_state(RegistrationState.marketplace)
-    await callback_query.message.edit_text("Какой маркетплей вас интересует?",
+    await callback_query.message.edit_text("Какой маркетплейс вас интересует?",
                                            reply_markup=kb.MARKETPLACE_QUESTION_INLINE_KEYBOARD)
 
 @router.callback_query(RegistrationState.marketplace, F.data != "Main Menu")
