@@ -10,6 +10,7 @@ class RegistrationState(StatesGroup):
     market_turnover: str = State()
     market_category: str = State()
     market_url: str = State()
+    contact_method: str = State()
     contact: str = State()
 
 

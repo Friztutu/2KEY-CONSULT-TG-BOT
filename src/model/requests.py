@@ -14,14 +14,13 @@ async def set_user(tg_id):
             await session.commit()
 
 
-async def set_registered_user(tg_id: int, name: str, data: dict[str, Any]) -> None:
+async def set_registered_user(tg_id: int, name: str, username: str, data: dict[str, Any]) -> None:
     async with async_session() as session:
         user = await session.scalar(select(RegisteredUsers).where(RegisteredUsers.tg_id == tg_id))
 
         marketplace = kb.MARKETPLACES[data["marketplace"]]
         service = kb.SERVICES[data["service"]]
         payment_method = kb.PAYMENT_METHODS[data["payment_method"]]
-        phone = data["contact"]
 
         if len(data["problem_type"]) == 1:
             problem_type = kb.CLIENT_PROBLEMS[data["problem_type"]]
@@ -29,37 +28,30 @@ async def set_registered_user(tg_id: int, name: str, data: dict[str, Any]) -> No
             problem_type = data["problem_type"]
 
         is_have_market = kb.IS_HAVE_MARKET[data["is_have_market"]]
-
-        if is_have_market:
-            market_duration = kb.MARKET_DURATIONS[data["market_duration"]]
-            market_turnover = kb.MARKET_TURNOVERS[data["market_turnover"]]
-            market_category = data["market_category"]
-            market_url = data["market_url"]
-        else:
-            market_duration = None
-            market_turnover = None
-            market_category = None
-            market_url = None
+        market_duration = kb.MARKET_DURATIONS[data["market_duration"]]
+        market_turnover = kb.MARKET_TURNOVERS[data["market_turnover"]]
+        market_category = data["market_category"] if data["market_category"] is not None else "-"
+        market_url = data["market_url"] if data["market_url"] is not None else "-"
 
         if not user:
-             session.add(RegisteredUsers(tg_id=tg_id,
-                             marketplace=marketplace,
-                             service=service,
-                             payment_method=payment_method,
-                             problem_type=problem_type,
-                             is_have_market=is_have_market,
-                             market_duration=market_duration,
-                             market_turnover=market_turnover,
-                             market_category=market_category,
-                             market_url=market_url,
-                             name=name,
-                             phone=phone
-                             ))
+             session.add(RegisteredUsers(
+                 tg_id=tg_id,
+                 marketplace=marketplace,
+                 service=service,
+                 payment_method=payment_method,
+                 problem_type=problem_type,
+                 is_have_market=is_have_market,
+                 market_duration=market_duration,
+                 market_turnover=market_turnover,
+                 market_category=market_category,
+                 market_url=market_url,
+                 name=name,
+                 username=username
+             ))
         else:
             await session.execute(
                 update(RegisteredUsers).values(
                     tg_id=tg_id,
-                    name=name,
                     marketplace=marketplace,
                     service=service,
                     payment_method=payment_method,
@@ -69,7 +61,8 @@ async def set_registered_user(tg_id: int, name: str, data: dict[str, Any]) -> No
                     market_turnover=market_turnover,
                     market_category=market_category,
                     market_url=market_url,
-                    phone=phone
+                    name=name,
+                    username=username
                 ).where(RegisteredUsers.tg_id == tg_id)
             )
 

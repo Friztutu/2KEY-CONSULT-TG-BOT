@@ -47,7 +47,7 @@ async def handle_payment_method_question(callback_query: types.CallbackQuery, st
 
     data = await state.get_data()
 
-    if data["service"] == "Разовая консультация":
+    if data["service"] == "1":
         await state.update_data(payment_method=None)
         await state.set_state(RegistrationState.problem_type)
         await callback_query.message.delete()
@@ -68,28 +68,20 @@ async def handle_problem_type_question(callback_query: types.CallbackQuery, stat
 
 
 @router.callback_query(RegistrationState.problem_type, F.data != "Back")
-async def handle_request_contact(callback_query: types.CallbackQuery, state: FSMContext) -> None:
+async def handle_callback_end_registration(callback_query: types.CallbackQuery, state: FSMContext) -> None:
     await state.update_data(problem_type=callback_query.data)
-    await state.set_state(RegistrationState.contact)
-    await callback_query.message.delete()
-    await callback_query.message.answer("Ваши контакты для связи?", reply_markup=kb.REQUEST_CONTACT_INLINE_KEYBOARD)
+    data = await state.get_data()
+    await rq.set_registered_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, data)
+    await state.clear()
+    await callback_query.message.edit_text("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.")
 
 
-@router.message(RegistrationState.contact)
-async def end_registration(message: types.Message, state: FSMContext):
-    if message.contact is not None:
-        await state.update_data(contact=message.contact.phone_number)
-        data = await state.get_data()
-        await rq.set_registered_user(message.from_user.id, message.from_user.first_name, data)
-        await state.clear()
-        await message.answer("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.", reply_markup=types.ReplyKeyboardRemove())
-    else:
-        await state.update_data(contact=message.text)
-        data = await state.get_data()
-        await rq.set_registered_user(message.from_user.id, message.from_user.first_name, data)
-        await state.clear()
-        await message.answer("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.",
-                             reply_markup=types.ReplyKeyboardRemove())
-
-
+@router.message(RegistrationState.problem_type)
+async def handle_message_end_registration(message: types.Message, state: FSMContext) -> None:
+    await state.update_data(problem_type=message.text)
+    data = await state.get_data()
+    await rq.set_registered_user(message.from_user.id, message.from_user.first_name,
+                                 message.from_user.username, data)
+    await state.clear()
+    await message.answer("Благодарим за то, что выбрали нас. Мы свяжемся с Вами в ближайшее время.")
 
