@@ -63,7 +63,8 @@ async def set_registered_user(tg_id: int, name: str, username: str, data: dict[s
                     market_category=market_category,
                     market_url=market_url,
                     name=name,
-                    username=username
+                    username=username,
+                    date=datetime.now()
                 ).where(RegisteredUsers.tg_id == tg_id)
             )
 
@@ -119,7 +120,7 @@ async def get_registered_users_by_day(target_date: date):
             RegisteredUsers.date >= start_datetime,
             RegisteredUsers.date < end_datetime
         )
-        
+
         result = await session.execute(query)
         records = result.scalars().all()
 
