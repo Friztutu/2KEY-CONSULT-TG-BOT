@@ -1,4 +1,7 @@
-from sqlalchemy import BigInteger
+import csv
+from sqlalchemy import BigInteger, Sequence
+from aiogram import types
+from io import StringIO
 
 from src.model.model import RegisteredUsers, ManagerUser
 
@@ -32,3 +35,24 @@ def get_managers_id(managers: tuple[ManagerUser]) -> list[str]:
         result.append(str(manager.tg_id))
 
     return result
+
+
+def get_csv_file(users: tuple[RegisteredUsers]) -> types.BufferedInputFile:
+    csv_buffer = StringIO()
+    writer = csv.writer(csv_buffer)
+
+    for user in users:
+        writer.writerow([
+            user.tg_id, user.username, user.name, user.marketplace, user.service, user.payment_method,
+            user.problem_type, user.is_have_market, user.market_duration, user.market_turnover,
+            user.market_category, user.market_url, user.date
+        ])
+
+    # Подготавливаем файл для отправки
+    csv_buffer.seek(0)
+    csv_file = types.BufferedInputFile(
+        csv_buffer.getvalue().encode(),
+        filename="users_table.csv"
+    )
+
+    return csv_file

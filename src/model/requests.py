@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, date, timedelta
 from typing import Any
 
 from .model import async_session, User, RegisteredUsers, ManagerUser
@@ -109,3 +109,18 @@ async def delete_manager(tg_id: int) -> None:
         if user:
             await session.delete(user)
             await session.commit()
+
+
+async def get_registered_users_by_day(target_date: date):
+    async with async_session() as session:
+        start_datetime = datetime.combine(target_date, datetime.min.time())
+        end_datetime = start_datetime + timedelta(days=1)
+        query = select(RegisteredUsers).where(
+            RegisteredUsers.date >= start_datetime,
+            RegisteredUsers.date < end_datetime
+        )
+        
+        result = await session.execute(query)
+        records = result.scalars().all()
+
+        return records

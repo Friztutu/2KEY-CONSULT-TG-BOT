@@ -31,3 +31,7 @@ class SendOneUserState(StatesGroup):
 class DeleteManagerState(StatesGroup):
     tg_id: str = State()
 
+
+class TableOneDayState(StatesGroup):
+    date: str = State()
+
