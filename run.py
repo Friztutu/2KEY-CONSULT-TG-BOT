@@ -21,8 +21,8 @@ def setup_scheduler(current_bot: Bot):
     scheduler.add_job(
         rq.delete_old_records,
         trigger='cron',
-        hour=7,
-        minute=10,
+        hour=3,
+        minute=00,
     )
     return scheduler
 

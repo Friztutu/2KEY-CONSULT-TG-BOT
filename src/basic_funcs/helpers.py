@@ -4,6 +4,7 @@ from aiogram import types
 from io import StringIO
 
 from src.model.model import RegisteredUsers, ManagerUser
+from src import strings
 
 
 def registered_user_to_string(registered_user: RegisteredUsers) -> str:
@@ -40,6 +41,7 @@ def get_managers_id(managers: tuple[ManagerUser]) -> list[str]:
 def get_csv_file(users: tuple[RegisteredUsers]) -> types.BufferedInputFile:
     csv_buffer = StringIO()
     writer = csv.writer(csv_buffer)
+    writer.writerow(strings.TABLE_COLUMN_NAMES)
 
     for user in users:
         writer.writerow([
