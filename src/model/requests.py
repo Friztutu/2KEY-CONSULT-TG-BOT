@@ -2,7 +2,7 @@ from datetime import datetime, date, timedelta
 from typing import Any
 
 from .model import async_session, User, RegisteredUsers, ManagerUser
-from sqlalchemy import select, update, BigInteger
+from sqlalchemy import select, update, BigInteger, delete
 from src import keyboards as kb
 
 
@@ -125,3 +125,11 @@ async def get_registered_users_by_day(target_date: date):
         records = result.scalars().all()
 
         return records
+
+
+async def delete_old_records() -> None:
+    async with async_session() as session:
+        month_ago = datetime.now() - timedelta(days=30)
+        stmt = delete(RegisteredUsers).where(RegisteredUsers.date < month_ago)
+        await session.execute(stmt)
+        await session.commit()

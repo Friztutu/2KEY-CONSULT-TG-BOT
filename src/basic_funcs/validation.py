@@ -24,8 +24,8 @@ async def is_date(message: types.Message) -> bool | date:
 async def is_manager(message: types.Message) -> bool:
     managers = await rq.get_all_managers()
     managers_id = get_managers_id(managers)
-    return str(message.from_user.id) != str(ADMIN_USER_ID) and str(message.from_user.id) not in managers_id
+    return str(message.from_user.id) == str(ADMIN_USER_ID) or str(message.from_user.id) in managers_id
 
 
 async def is_admin(message: types.Message) -> bool:
-    return str(message.from_user.id) != str(ADMIN_USER_ID)
+    return str(message.from_user.id) == str(ADMIN_USER_ID)
