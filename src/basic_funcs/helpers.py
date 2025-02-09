@@ -53,7 +53,7 @@ def get_csv_file(users: tuple[RegisteredUsers]) -> types.BufferedInputFile:
     # Подготавливаем файл для отправки
     csv_buffer.seek(0)
     csv_file = types.BufferedInputFile(
-        csv_buffer.getvalue().encode(),
+        csv_buffer.getvalue().encode("utf-8"),
         filename="users_table.csv"
     )
 
