@@ -23,7 +23,7 @@ async def set_registered_user(tg_id: int, name: str, username: str, data: dict[s
         service = kb.SERVICES[data["service"]]
         payment_method = kb.PAYMENT_METHODS[data["payment_method"]]
 
-        if len(data["problem_type"]) == 1:
+        if data["problem_type"] in ("1", "2", "3", "4"):
             problem_type = kb.CLIENT_PROBLEMS[data["problem_type"]]
         else:
             problem_type = data["problem_type"]

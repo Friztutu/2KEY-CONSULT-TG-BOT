@@ -39,13 +39,5 @@ async def handle_market_url_question(message: types.Message, state: FSMContext):
 @router.message(RegistrationState.market_url)
 async def choice_payment_method_(message: types.Message, state: FSMContext):
     await state.update_data(market_url=message.text)
-
-    data = await state.get_data()
-
-    if data["service"] == "1":
-        await state.update_data(payment_method=None)
-        await state.set_state(RegistrationState.problem_type)
-        await message.answer(strings.PROBLEM_TYPE_QUESTION, reply_markup=kb.CLIENT_PROBLEM_INLINE_KEYBOARDS)
-    else:
-        await state.set_state(RegistrationState.payment_method)
-        await message.answer(strings.PAYMENT_METHOD_QUESTION, reply_markup=kb.PAYMENT_METHOD_INLINE_KEYBOARD)
+    await state.set_state(RegistrationState.problem_type)
+    await message.answer(strings.PROBLEM_TYPE_QUESTION, reply_markup=kb.CLIENT_PROBLEM_INLINE_KEYBOARDS)

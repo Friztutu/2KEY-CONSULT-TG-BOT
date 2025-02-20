@@ -28,8 +28,8 @@ async def handle_presence_market_question_back(callback_query: types.CallbackQue
     await callback_query.message.edit_text(strings.SERVICE_QUESTION, reply_markup=keyboard)
 
 
-@router.callback_query(RegistrationState.payment_method, F.data == "Back")
-async def handle_payment_method_question_back(callback_query: types.CallbackQuery, state: FSMContext):
+@router.callback_query(RegistrationState.problem_type, F.data == "Back")
+async def handle_problem_type_question_back(callback_query: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
 
     if data["is_have_market"] == "1":
@@ -41,25 +41,17 @@ async def handle_payment_method_question_back(callback_query: types.CallbackQuer
         await callback_query.message.edit_text(strings.IS_HAVE_MARKET_QUESTION, reply_markup=kb.PRESENCE_MARKET_INLINE_KEYBOARD)
 
 
-@router.callback_query(RegistrationState.problem_type, F.data == "Back")
-async def handle_problem_type_question_back(callback_query: types.CallbackQuery, state: FSMContext):
-    data = await state.get_data()
+@router.callback_query(RegistrationState.payment_method, F.data == "Back")
+async def handle_payment_method_question_back(callback_query: types.CallbackQuery, state: FSMContext):
+     await state.set_state(RegistrationState.problem_type)
 
-    if data["service"] == "1" and data["is_have_market"] == "2":
-        await state.set_state(RegistrationState.is_have_market)
-        await callback_query.message.edit_text(strings.IS_HAVE_MARKET_QUESTION, reply_markup=kb.PRESENCE_MARKET_INLINE_KEYBOARD)
-    elif data["service"] == "1" and data["is_have_market"] == "1":
-        await state.set_state(RegistrationState.market_url)
-        await callback_query.message.edit_text(strings.MARKET_URL_QUESTION, reply_markup=kb.BACK_INLINE_KEYBOARD)
-    else:
-        await state.set_state(RegistrationState.payment_method)
-        await callback_query.message.edit_text(strings.PAYMENT_METHOD_QUESTION, reply_markup=kb.PAYMENT_METHOD_INLINE_KEYBOARD)
+     data = await state.get_data()
+     keyboard = kb.CLIENT_PROBLEM_INLINE_KEYBOARDS
 
+     if data["is_have_market"] == "2":
+         keyboard = kb.BACK_INLINE_KEYBOARD
 
-@router.message(RegistrationState.contact, is_back)
-async def handle_request_contact_back(message: types.Message, state: FSMContext) -> None:
-    await state.set_state(RegistrationState.problem_type)
-    await message.answer(strings.PROBLEM_TYPE_QUESTION, reply_markup=kb.CLIENT_PROBLEM_INLINE_KEYBOARDS)
+     await callback_query.message.edit_text(strings.PROBLEM_TYPE_QUESTION, reply_markup=keyboard)
 
 
 @router.callback_query(RegistrationState.market_duration, F.data == "Back")
