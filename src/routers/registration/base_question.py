@@ -47,7 +47,7 @@ async def handle_problem_type_question(callback_query: types.CallbackQuery, stat
     data = await state.get_data()
     keyboard = kb.CLIENT_PROBLEM_INLINE_KEYBOARDS
 
-    if data["is_have_market"] == "2":
+    if data["is_have_market"] == "2" or data["service"] == "1":
         keyboard = kb.BACK_INLINE_KEYBOARD
 
     await state.set_state(RegistrationState.problem_type)
