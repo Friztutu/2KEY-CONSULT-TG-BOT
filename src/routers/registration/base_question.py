@@ -46,12 +46,14 @@ async def handle_problem_type_question(callback_query: types.CallbackQuery, stat
 
     data = await state.get_data()
     keyboard = kb.CLIENT_PROBLEM_INLINE_KEYBOARDS
+    message_text = strings.PROBLEM_TYPE_QUESTION_WITH_VARIANTS
 
     if data["is_have_market"] == "2" or data["service"] == "1":
         keyboard = kb.BACK_INLINE_KEYBOARD
+        message_text = strings.PROBLEM_TYPE_QUESTION_WITHOUT_VARIANTS
 
     await state.set_state(RegistrationState.problem_type)
-    await callback_query.message.edit_text(strings.PROBLEM_TYPE_QUESTION, reply_markup=keyboard)
+    await callback_query.message.edit_text(message_text, reply_markup=keyboard)
 
 
 @router.callback_query(RegistrationState.problem_type, F.data != "Back")
