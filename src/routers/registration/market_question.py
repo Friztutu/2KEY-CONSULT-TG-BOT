@@ -40,4 +40,4 @@ async def handle_market_url_question(message: types.Message, state: FSMContext):
 async def choice_payment_method_(message: types.Message, state: FSMContext):
     await state.update_data(market_url=message.text)
     await state.set_state(RegistrationState.problem_type)
-    await message.answer(strings.PROBLEM_TYPE_QUESTION, reply_markup=kb.CLIENT_PROBLEM_INLINE_KEYBOARDS)
+    await message.answer(strings.PROBLEM_TYPE_QUESTION_WITH_VARIANTS, reply_markup=kb.CLIENT_PROBLEM_INLINE_KEYBOARDS)
